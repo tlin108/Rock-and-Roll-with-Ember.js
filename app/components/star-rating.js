@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'div',
-  className: ['rating-panel'],
+  classNames: ['rating-panel'],
 
   rating:     0,
   maxRating:  5,
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
 
   actions: {
     setRating: function(newRating) {
-      this.sendAction('onClick', {
+      this.get('on-click')({
         item: this.get('item'),
         rating: newRating
       });
