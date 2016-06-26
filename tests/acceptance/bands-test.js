@@ -9,27 +9,20 @@ var server;
 
 test('List bands', function(assert) {
   server = new Pretender(function() {
-    this.get('/bands', function() {
-      var response = {
-        data: [
-          {
-            id: 1,
-            type: 'bands',
-            attributes: {
-              name: 'Radiohead'
-            }
-          },
-          {
-            id: 2,
-            type: 'bands',
-            attributes: {
-              name: 'Long Distance Calling'
-            } 
-          },
-        ]
-      };
-      return [200, {'Content-Type': 'application/vnd.api+json' }, JSON.stringify(response)];
-    });
+    httpStubs.stubBands(this, [
+      {
+        id:1,
+        attributes: {
+          name: 'Radiohead'
+        }
+      },
+      {
+        id:2,
+        attributes: {
+          name: 'Long Distance Calling'
+        }
+      }
+    ]);
   });
     
   visit('/bands');
@@ -67,35 +60,22 @@ andThen(function() {
 
 test('Create a new song in two steps', function(assert) {
   server = new Pretender(function() {
-    this.get('/bands', function() {
-      var response = {
-        data: [
-          {
-            id: 1,
-            type: 'bands',
-            attributes: {
-              name: 'Radiohead'
-            }
-          }
-        ]
-      };
-      return [200, {'Content-Type': 'application/vnd.api+json' }, JSON.stringify(response)];
-    });
-
-    this.post('/songs', function() {
-      var response = {
-        data: [
-          {
-            id: 1,
-            type: 'songs',
-            attributes: {
-              name: 'Killer Cars'
-            }
-          }
-        ]
-      };
-      return [200, {'Content-Type': 'application/vnd.api+json'}, JSON.stringify(response)];
-    });
+    httpStubs.stubBands(this, [
+      {
+        id:1,
+        attributes: {
+          name: 'Radiohead'
+        }
+      }
+    ]);
+    httpStubs.stubCreateSong(this, [
+      {
+        id:1,
+        attributes: {
+          name: 'Killer Cars'
+        }
+      }
+    ]);
 
     this.get('/bands/1/songs', () => {
         return [200, {'Content-Type': 'application/vnd.api+json' }, JSON.stringify({ data: [] })];

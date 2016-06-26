@@ -33,7 +33,7 @@ export default {
   stubBands: function(pretender, data) {
     var response = data.map(function(band) {
       return responseItemForBand(band);
-    })
+    });
     pretender.get('/bands', function() {
       return [200, {'Content-Type': 'application/vnd.api+json'}, JSON.stringify({data: response }) ];
     });
