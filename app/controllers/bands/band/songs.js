@@ -1,11 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  queryParams: {
+    sortBy: 'sort',
+    searchTerm: 's',
+  },
   title: '',
   songCreationStarted: false,
-  
-  searchTerm: '',
 
+  searchTerm: '',
   matchingSongs: Ember.computed('model.songs.@each.title', 'searchTerm', function() {
     var searchTerm = this.get('searchTerm').toLowerCase();
     return this.get('model.songs').filter(function(song) {
