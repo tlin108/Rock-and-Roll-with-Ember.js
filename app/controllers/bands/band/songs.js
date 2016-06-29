@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import { capitalize } from '../../../helpers/capitalize';
+const { Controller, computed } = Ember;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: {
     sortBy: 'sort',
     searchTerm: 's',
@@ -10,7 +11,7 @@ export default Ember.Controller.extend({
   songCreationStarted: false,
 
   searchTerm: '',
-  matchingSongs: Ember.computed('model.songs.@each.title', 'searchTerm', function() {
+  matchingSongs: computed('model.songs.@each.title', 'searchTerm', function() {
     var searchTerm = this.get('searchTerm').toLowerCase();
     return this.get('model.songs').filter(function(song) {
       return song.get('title').toLowerCase().indexOf(searchTerm) !== -1;
@@ -18,7 +19,7 @@ export default Ember.Controller.extend({
   }),
 
   sortBy: 'ratingDesc',
-  sortProperties: Ember.computed('sortBy', function() {
+  sortProperties: computed('sortBy', function() {
     var options = {
       'ratingDesc': 'rating:desc,title:asc',
       'ratingAsc': 'rating:asc,title:asc',
@@ -28,31 +29,29 @@ export default Ember.Controller.extend({
     return options[this.get('sortBy')].split(','); 
   }),
 
-  sortedSongs: Ember.computed.sort('matchingSongs', 'sortProperties'),
+  sortedSongs: computed.sort('matchingSongs', 'sortProperties'),
 
-  isAddButtonDisabled: Ember.computed('title', function() {
-    return Ember.isEmpty(this.get('title'));
-  }),
+  isAddButtonDisabled: computed.empty('title'),
 
-  canCreateSong: Ember.computed('songCreationStarted', 'model.songs.length', function() {
-    return this.get('songCreationStarted') || this.get('model.songs.length');
-  }),
+  hasSongs: computed.bool('model.songs.length'),
+  
+  canCreateSong: computed.or('songCreationStarted', 'hasSongs'),
 
-  newSongPlaceholder: Ember.computed('model.name', function() { 
+  newSongPlaceholder: computed('model.name', function() { 
     var bandName = this.get('model.name');
     return `New ${capitalize(bandName)} song`;
   }),
 
   actions: {
-    enableSongCreation: function() {
+    enableSongCreation() {
       this.set('songCreationStarted', true);
     },
 
-    setSorting: function(option) {
+    setSorting(option) {
       this.set('sortBy', option);
     },
 
-    updateRating: function(params) {
+    updateRating(params) {
       var song = params.item, 
           rating = params.rating;
 

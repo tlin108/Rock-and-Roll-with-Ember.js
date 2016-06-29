@@ -1,12 +1,12 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  model: function() {
+  model() {
     return this.modelFor('bands.band');
   },
 
   actions: {
-    willTransition: function(transition) {
+    willTransition(transition) {
       var controller = this.get('controller'), leave;
 
       if (controller.get('isEditing')) {
