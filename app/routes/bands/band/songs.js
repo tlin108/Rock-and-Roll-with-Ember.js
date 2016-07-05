@@ -1,41 +1,29 @@
 import Ember from 'ember';
-import { capitalize as capitalizeWords } from '../../../helpers/capitalize';
+import Song from '../../../models/song';
 
 export default Ember.Route.extend({
-  model() {
+  model: function () {
     return this.modelFor('bands.band');
   },
 
-  resetController(controller) {
+  resetController: function(controller) {
     controller.set('songCreationStarted', false);
   },
 
   actions: {
-    save() {
-      var controller = this.get('controller'),
-          band = controller.get('model');
-
-      return band.save();
-    },
-
-    didTransition() {
+    didTransition: function() {
       var band = this.modelFor('bands.band');
-      var name = capitalizeWords(band.get('name')); 
-      document.title = `${name} songs - Rock & Roll`;
-
+      document.title = `${band.get('name')} songs - Rock & Roll`;
     },
 
-  	createSong() {
+    createSong: function() {
       var controller = this.get('controller');
       var band = this.modelFor('bands.band');
+      var title = controller.get('title');
 
-      var song = this.store.createRecord('song', {
-        title: controller.get('title'),
-        band: band
-      });
-      song.save().then(function() {
-        controller.set('title', '');
-      });
-  	},
+      var song = Song.create({ title: title, band: band});
+      band.get('songs').pushObject(song);
+      controller.set('title', '');
+    }
   } 
 });
