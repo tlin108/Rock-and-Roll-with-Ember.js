@@ -1,7 +1,7 @@
 # Rarwe
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+Due to API issue, this static-db branch will serve as a replica to the actual App but with static content instead.
+It can be viewed at here: https://desolate-shore-79941.herokuapp.com/bands
 
 ## Prerequisites
 
